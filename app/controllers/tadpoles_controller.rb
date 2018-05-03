@@ -35,7 +35,7 @@ class TadpolesController < ApplicationController
       if @tadpole.update(tadpole_params)
         format.html { redirect_to @tadpole, notice: 'Tadpole was successfully updated.' }
       else
-        format.html { render :edit }
+        format.html { redirect_to @tadpole, notice: 'get out' }
       end
     end
   end
@@ -46,6 +46,23 @@ class TadpolesController < ApplicationController
       format.html { redirect_to tadpoles_url, notice: 'Tadpole was successfully destroyed.' }
     end
   end
+
+  def metamorphose
+    @frog = Frog.new
+    @frog.name = @tadpole.name
+    @frog.color = @tadpole.color
+    @frog.pond = @tadpole.pond
+
+    respond_to do |format|
+      if @frog.save
+        @tadpole.destroy
+        format.html { redirect_to @frog, notice: 'Your tadpole has become a frog.' }
+      else
+        format.html { render :show }
+      end
+    end
+  end
+
 
   private
     def set_tadpole
